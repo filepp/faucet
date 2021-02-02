@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -23,7 +25,7 @@ var (
 	from   = flag.String("from", "", "--from")
 	amount = flag.String("amount", "1000", "--amount")
 
-	lastSentMap map[string]time.Time
+	lastSentMap = map[string]time.Time{}
 	locker      sync.RWMutex
 )
 
@@ -61,7 +63,11 @@ func cmdSend(from, to, amount string) error {
 		log.Errorf("failed to send fil, %v, addr=%s\n", err, to)
 		return err
 	}
-	log.Info("output", output)
+	strOuptut := string(output)
+	log.Info("output", strOuptut)
+	if strings.Contains(strOuptut, "failed") {
+		return errors.New(strOuptut)
+	}
 	return nil
 }
 
