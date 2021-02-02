@@ -43,10 +43,10 @@ func sendFil(c *gin.Context) {
 		err := cmdSend(*from, address, *amount)
 		if err == nil {
 			lastSentMap[address] = time.Now()
-			c.JSON(http.StatusBadRequest, err.Error())
+			c.JSON(http.StatusOK, "success")
 			return
 		} else {
-			c.JSON(http.StatusOK, "success")
+			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 	}
