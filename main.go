@@ -77,6 +77,7 @@ func main() {
 
 	engine := gin.Default()
 	engine.GET("/api/v1/send", sendFil)
+	engine.Static("/files", "./files")
 
 	addr := fmt.Sprintf(":%d", *port)
 	httpServer := &http.Server{Addr: addr, Handler: engine}
