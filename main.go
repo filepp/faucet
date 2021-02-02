@@ -38,11 +38,12 @@ func sendFil(c *gin.Context) {
 	locker.Lock()
 	defer locker.Unlock()
 
-	lastSendAt, ok := lastSentMap[address]
+	ip := c.ClientIP()
+	lastSendAt, ok := lastSentMap[ip]
 	if !ok || lastSendAt.Add(time.Hour*24).Before(time.Now()) {
 		err := cmdSend(*from, address, *amount)
 		if err == nil {
-			lastSentMap[address] = time.Now()
+			lastSentMap[ip] = time.Now()
 			c.JSON(http.StatusOK, "success")
 			return
 		} else {
@@ -77,7 +78,7 @@ func main() {
 	engine := gin.Default()
 	engine.GET("/api/v1/send", sendFil)
 
-	addr := fmt.Sprintf("0.0.0.0:%d", *port)
+	addr := fmt.Sprintf(":%d", *port)
 	httpServer := &http.Server{Addr: addr, Handler: engine}
 
 	w := sync.WaitGroup{}
