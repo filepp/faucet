@@ -1,2 +1,2 @@
 # faucet
-lotus faucet
+filecoin faucet
