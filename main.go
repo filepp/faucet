@@ -57,7 +57,7 @@ func sendFil(c *gin.Context) {
 func cmdSend(from, to, amount string) error {
 	dealCmd := exec.Command("lotus", "send", to, amount)
 	if from != "" {
-		dealCmd = exec.Command("lotus", "send", "--from", from, amount)
+		dealCmd = exec.Command("lotus", "send", "--from", from, to, amount)
 	}
 	output, err := dealCmd.Output()
 	if err != nil {
